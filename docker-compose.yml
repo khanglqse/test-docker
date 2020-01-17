@@ -6,8 +6,13 @@ services:
             context: ./client
             dockerfile: Dockerfile
         image: kunwalle/client
+        restart: always
         volumes:
             - ./client:/usr/src/app
+        ports: 
+            - "3000:3000"
+        expose: 
+            - "3000"
         # environment: 
         #     - VIRTUAL_HOST=dashboard.khang.test
         #     - VIRTUAL_PORT=8080
@@ -27,6 +32,10 @@ services:
         image: kunwalle/server
         volumes:
             - ./server:/usr/src/app
+        ports: 
+            - "5000:5000"
+        expose: 
+            - "5000"
         # environment: 
         #     - VIRTUAL_HOST=api.khang.test
         #     - VIRTUAL_PORT=8080
@@ -52,6 +61,16 @@ services:
     #         - ./test:/usr/src/app
     #     command: npm run test
 
+    # nginx:
+    #     image: jwilder/nginx-proxy
+    #     container_name: nginx-proxy
+    #     ports:
+    #         - '80:80'
+    #         - '433:433'
+    #     volumes:
+    #         - ./nginx-conf/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    #         - ./certs:/etc/nginx/certs
+    
     nginx:
         image: nginx:alpine
         ports:
@@ -59,9 +78,6 @@ services:
             - '433:433'
         volumes:
             - ./nginx-conf/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-    
-    
-    
 
 
  
