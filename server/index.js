@@ -1,9 +1,12 @@
 const express = require('express')
 const app = express();
 var cors = require('cors')
+const fs = require('fs')
+const http = require('http')
 
 var allowedOrigins = ['https://api.khang.test',
-                      'http://yourapp.com'];
+                      'https://dashboard.khang.test',
+                      'https://khang.test'];
 app.use(cors({
   origin: function(origin, callback){
     if(!origin) return callback(null, true);
@@ -15,9 +18,15 @@ app.use(cors({
     return callback(null, true);
   }
 }));
-app.get('/', function (req, res, next) {
+
+app.get('/',  function (req, res, next) {
   res.json({ok: true})
 })
-app.listen(5000, () => {
-  console.log('Example app listening on port 5000!')
-});
+
+http.createServer({
+    key: fs.readFileSync('/etc/backend/certs/rootCA.key'),
+  cert: fs.readFileSync('/etc/backend/certs/rootCA.pem'),
+  passphrase: '123456',
+  requestCert: true
+}, app)
+.listen(5000);
